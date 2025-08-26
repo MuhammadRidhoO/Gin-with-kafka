@@ -1,16 +1,11 @@
-# Folder build
 /bin/
 /obj/
 
-# File executable
 *.exe
 
-# Log file
 *.log
 
-# Environment file (rahasia)
 .env
 
-# IDE settings
 .vscode/
 .idea/

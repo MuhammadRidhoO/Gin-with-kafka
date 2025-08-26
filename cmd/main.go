@@ -13,12 +13,10 @@ import (
 )
 
 func main() {
-	// Load .env
 	if err := godotenv.Load(); err != nil {
 		log.Println("⚠️ No .env file found, using system environment variables")
 	}
 
-	// DB
 	db := config.InitDB()
 	sqlDB, err := db.DB()
 	if err != nil {
@@ -26,7 +24,6 @@ func main() {
 	}
 	defer sqlDB.Close()
 
-	// Kafka
 	topic := os.Getenv("KAFKA_TOPIC")
 	if topic == "" {
 		topic = "user-topic"
@@ -42,10 +39,8 @@ func main() {
 	kafkaWriter := config.InitKafkaWriter(topic)
 	defer kafkaWriter.Close()
 
-	// Start Kafka consumer in background
 	go kafka.StartConsumer(broker, topic, "user-group")
 
-	// Setup router
 	app := routes.SetupRouter(kafkaWriter, db)
 
 	log.Println("🚀 Server running on :8080")
@@ -53,7 +48,6 @@ func main() {
 		log.Fatalf("❌ Server failed: %v", err)
 	}
 
-	// keep main alive
 	for {
 		time.Sleep(time.Second)
 	}

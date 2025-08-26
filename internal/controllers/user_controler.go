@@ -17,7 +17,7 @@ func NewUserHandler(userUC service.UserUsecase) *UserHandler {
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
-	var req models.User // biasanya ambil dari entity atau bikin DTO khusus request
+	var req models.User
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "invalid request",
@@ -25,7 +25,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	// panggil usecase
 	err := h.uc.Create(c.Request.Context(), &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
